@@ -128,12 +128,36 @@ public class RideBookingUI {
 				break;
 			}
 		}
+		
 
 		User user = null;
-		
-		
-		// add further
+		try {
+			switch (type) {
+			case "customer" -> {
+				// Phone validation
+				String phone;
+				while (true) {
+					System.out.print("Phone Number: ");
+					phone = scanner.nextLine().trim();
+					if (phone.isEmpty()) {
+						System.out.println("Phone number is required.");
+					} else if (!ValidationUtil.isValidPhoneNumber(phone)) {
+						System.out.println("Enter a valid 10-digit phone number starting with 6, 7, 8, or 9.");
+					} else {
+						break;
+					}
+				}
+
+				user = new Customer(userId, name, email, password, phone);
+			}
+			
+			}
+		} 
+		catch (Exception e) {
+			System.out.println("Unexpected error during registration: " + e.getMessage());
+		}
 	}
+		
 	private void loginUser() {
 		System.out.println("\n--- User Login ---");
 

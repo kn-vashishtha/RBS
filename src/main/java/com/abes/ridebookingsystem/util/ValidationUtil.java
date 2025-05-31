@@ -31,6 +31,11 @@ public class ValidationUtil {
                password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&\\-+=()!])(?=\\S+$).{8,20}$");
     }
     
+ // Phone number validation (Indian numbers)
+    public static boolean isValidPhoneNumber(String phone) {
+        return phone != null && phone.matches("^(\\+91)?[6-9]\\d{9}$");
+    }
+    
  // Common empty check
     public static boolean isNotEmpty(String value) {
         return value != null && !value.trim().isEmpty();
