@@ -9,5 +9,6 @@ import java.util.Map;
 public class DataCollection {
 
 	public static final Map<String, User> userMap = new HashMap<>();
+	public static final Map<String, VehicleType> vehicleTypeMap = new HashMap<>();
 	public static Map<String, Ride> rideMap = new HashMap<>();
 }
