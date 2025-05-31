@@ -150,9 +150,29 @@ public class RideBookingUI {
 
 				user = new Customer(userId, name, email, password, phone);
 			}
+			case "driver" -> {
+				// License validation
+				String license;
+				while (true) {
+					System.out.print("License Number: ");
+					license = scanner.nextLine().trim();
+					if (!ValidationUtil.isValidLicenseNumber(license)) {
+						System.out.println("License number is required.");
+					} else {
+						break;
+					}
+				}
+
+				boolean available = true;
+				user = new Driver(userId, name, email, password, license, available);
+			}
+			}
+
+			userService.registerUser(user);
+			System.out.println("User registered successfully!");
 			
 			}
-		} 
+		
 		catch (Exception e) {
 			System.out.println("Unexpected error during registration: " + e.getMessage());
 		}
@@ -231,5 +251,25 @@ public class RideBookingUI {
 			}
 		}
 	}
+	private void driverMenu(Driver driver) throws RideException {
+		String driverId = driver.getUserId();
+		while (true) {
+			System.out.println("\n--- Driver Menu ---");
+			System.out.println("1. View available rides");
+			System.out.println("2. Accept a ride");
+			System.out.println("3. Reject a ride");
+			System.out.println("4. Logout");
+			System.out.print("Choose an option: ");
+
+			int choice;
+			try {
+				choice = Integer.parseInt(scanner.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid input. Please enter a number.");
+				continue;
+			}
+		//ride.......}
+	//}
+	
 
 }
