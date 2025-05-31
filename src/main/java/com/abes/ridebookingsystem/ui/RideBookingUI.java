@@ -202,5 +202,34 @@ public class RideBookingUI {
 //			adminMenu(admin);
 //		}
 //	}
+	
+	private void customerMenu(Customer customer) {
+		while (true) {
+			System.out.println("\n--- Customer Menu ---");
+			System.out.println("1. Book a Ride");
+			System.out.println("2. Cancel Ride");
+			System.out.println("3. Logout");
+			System.out.print("Choose an option: ");
+
+			int choice;
+			try {
+				choice = Integer.parseInt(scanner.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid input. Please enter a number.");
+				continue;
+			}
+
+			switch (choice) {
+			case 1 -> bookRide(customer);
+			case 2 -> cancelRide(customer);
+			case 3 -> {
+				System.out.println("Logging out...");
+				System.out.println("Logged out");
+				return;
+			}
+			default -> System.out.println("Invalid option. Try again.");
+			}
+		}
+	}
 
 }
