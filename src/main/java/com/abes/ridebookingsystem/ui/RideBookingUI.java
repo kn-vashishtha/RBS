@@ -1,6 +1,8 @@
 package com.abes.ridebookingsystem.ui;
 
 import java.util.Scanner;
+import com.abes.ridebookingsystem.exception.RideException;
+import com.abes.ridebookingsystem.service.RideServiceImpl;
 
 import com.abes.ridebookingsystem.dto.*;
 import com.abes.ridebookingsystem.service.UserService;
@@ -10,6 +12,7 @@ import com.abes.ridebookingsystem.util.ValidationUtil;
 public class RideBookingUI {
 	private final UserServiceImpl userService = new UserServiceImpl();
 	private final Scanner scanner = new Scanner(System.in);
+	private final RideServiceImpl rideService = new RideServiceImpl();
 
 	public void start() {
 		System.out.println("Welcome to the Ride Booking System!");
@@ -213,15 +216,15 @@ public class RideBookingUI {
 		}
 	}
 
-//	private void postLoginMenu(User user) throws RideException {
-//		if (user instanceof Customer customer) {
-//			customerMenu(customer);
-//		} else if (user instanceof Driver driver) {
-//			driverMenu(driver);
-//		} else if (user instanceof Admin admin) {
-//			adminMenu(admin);
-//		}
-//	}
+	private void postLoginMenu(User user) throws RideException {
+		if (user instanceof Customer customer) {
+			customerMenu(customer);
+		} else if (user instanceof Driver driver) {
+			driverMenu(driver);
+		} else if (user instanceof Admin admin) {
+			adminMenu(admin);
+		}
+	}
 	
 	private void customerMenu(Customer customer) {
 		while (true) {
@@ -268,8 +271,99 @@ public class RideBookingUI {
 				System.out.println("Invalid input. Please enter a number.");
 				continue;
 			}
-		//ride.......}
-	//}
+
+			switch (choice) {
+						case 1: // View available rides
+							List<Ride> availableRides = rideService.getVisibleRidesForDriver(driverId);
+							if (availableRides.isEmpty()) {
+								System.out.println("No rides available for you at the moment.");
+							} else {
+								System.out.println("Available rides:");
+								for (Ride ride : availableRides) {
+									System.out.println("Ride ID: " + ride.getRideId() + ", Customer: " + ride.getCustomerId()
+											+ ", Fare: ₹" + ride.getFare());
+								}
+							}
+							break;
+						case 2: // Accept a ride
+							System.out.print("Enter Ride ID to accept: ");
+							String acceptRideId = scanner.nextLine();
+							boolean accepted = rideService.acceptRide(driverId, acceptRideId);
+							if (accepted) {
+								System.out.println("Ride accepted successfully!");
+							} else {
+								System.out.println("Failed to accept ride. It may not be available or already accepted.");
+							}
+							break;
+						case 3: // Reject a ride
+							System.out.print("Enter Ride ID to reject: ");
+							String rejectRideId = scanner.nextLine();
+							boolean rejected = rideService.rejectRide(driverId, rejectRideId);
+							if (rejected) {
+								System.out.println("Ride rejected successfully!");
+							} else {
+								System.out.println("Failed to reject ride.");
+							}
+							break;
+						case 4: {
+							System.out.println("Logging out from driver account...");
+							System.out.println("Logged out");
+							return;
+						}
+						default:
+							System.out.println("Invalid option. Try again.");
+						}
+		}}
+//	admin
+	private void bookRide(Customer customer) {
+		System.out.println("\n--- Book a Ride ---");
+
+		// Step 1: Show Vehicle Options
+		System.out.println("Available Vehicle Options:");
+		for (WheelerType wt : WheelerType.values()) {
+			System.out.println("\n" + wt + ":");
+			for (VehicleType vt : VehicleType.values()) {
+				if (vt.getWheelerType() == wt) {
+					System.out.println(" - " + vt);
+				}
+			}
+		}
+		// Step 6: Book Ride
+				try {
+					Ride bookedRide = rideService.bookRide(customer.getUserId(), source, destination, totalFare);
+
+					// Step 7: Confirmation
+					System.out.println("\n--- Payment Summary ---");
+					System.out.println("Customer: " + customer.getName());
+					System.out.println("Vehicle: " + selectedVehicle);
+					System.out.println("From: " + source + " -> To: " + destination);
+					System.out.println("Distance: " + distance + " km");
+					System.out.println("Payment Mode: " + paymentMethod);
+					System.out.printf("Total Amount Paid: ₹%.2f\n", totalFare);
+					System.out.println("Ride booked successfully with ID: " + bookedRide.getRideId());
+
+				} catch (Exception e) {
+					System.out.println("Unexpected error during booking: " + e.getMessage());
+				}
+			}
+
+			private void cancelRide(Customer customer) {
+				System.out.println("\n--- Cancel a Ride ---");
+				System.out.print("Enter Ride ID to cancel: ");
+				String rideId = scanner.nextLine().trim();
+
+				try {
+					// Add validation if necessary to check ride ownership
+
+					rideService.cancelRide(rideId);
+					System.out.println("Ride " + rideId + " cancelled successfully.");
+
+				} catch (RideException e) {
+					System.out.println("Could not cancel ride: " + e.getMessage());
+				} catch (Exception e) {
+					System.out.println("Unexpected error during ride cancellation: " + e.getMessage());
+				}
+			}
 	
 
 }
