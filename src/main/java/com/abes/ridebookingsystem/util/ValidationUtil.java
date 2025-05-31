@@ -44,4 +44,37 @@ public class ValidationUtil {
     public static boolean isValidLicenseNumber(String license) {
         return license != null && !license.trim().isEmpty();
     }
+    
+ // Ride distance validation
+    public static boolean isValidDistance(double distance) {
+        return distance >= 2 && distance <= 100;
+    }
+
+    // Location validation (basic check)
+    public static boolean isValidLocation(String location) {
+        return location != null && !location.trim().isEmpty();
+    }
+
+    // Vehicle type validation
+    public static boolean isValidVehicleType(String vehicleType) {
+        if (vehicleType == null) return false;
+        try {
+            VehicleType.valueOf(vehicleType.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    
+    }
+ // Enum validation helper
+    public static <T extends Enum<T>> boolean isValidEnum(Class<T> enumClass, String value) {
+        if (value == null) return false;
+        try {
+            Enum.valueOf(enumClass, value.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+    
 }
