@@ -226,6 +226,52 @@ public class RideBookingUI {
 				}
 			}
 		}
+		
+		// Step 2: Vehicle Type Validation
+				VehicleType selectedVehicle;
+				while (true) {
+					System.out.print("\nEnter vehicle type (e.g., BIKE, SEDAN): ");
+					String vehicleStr = scanner.nextLine().trim().toUpperCase();
+					if (ValidationUtil.isValidVehicleType(vehicleStr)) {
+						selectedVehicle = VehicleType.valueOf(vehicleStr);
+						break;
+					} else {
+						System.out.println("Invalid vehicle type. Try again.");
+					}
+				}
+
+				// Step 3: Source and Destination
+				String source, destination;
+				while (true) {
+					System.out.print("Enter source location: ");
+					source = scanner.nextLine().trim();
+
+					System.out.print("Enter destination location: ");
+					destination = scanner.nextLine().trim();
+
+					if (!ValidationUtil.isValidLocation(source) || !ValidationUtil.isValidLocation(destination)) {
+						System.out.println("Source and destination cannot be empty.");
+					} else if (source.equalsIgnoreCase(destination)) {
+						System.out.println("Source and destination should be different.");
+					} else {
+						break;
+					}
+				}
+
+				double distance;
+				while (true) {
+					System.out.print("Enter distance in kilometers: ");
+					try {
+						distance = Double.parseDouble(scanner.nextLine().trim());
+						if (ValidationUtil.isValidDistance(distance)) {
+							break;
+						} else {
+							System.out.println("Distance must be between 2 and 100 km.");
+						}
+					} catch (NumberFormatException e) {
+						System.out.println("Invalid number. Please enter a numeric distance.");
+					}
+				}
 		// Step 6: Book Ride
 		try {
 			Ride bookedRide = rideService.bookRide(customer.getUserId(), source, destination, totalFare);
