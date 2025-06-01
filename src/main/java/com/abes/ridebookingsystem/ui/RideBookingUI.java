@@ -297,7 +297,7 @@ public class RideBookingUI {
 				break;
 			case 3: // Reject a ride
 				System.out.print("Enter Ride ID to reject: ");
-				String rejectRideId = scanner.nextLine();
+				String rejectRideId =scanner.nextLine().trim().toUpperCase();
 				boolean rejected = rideService.rejectRide(driverId, rejectRideId);
 				if (rejected) {
 					System.out.println("Ride rejected successfully!");
@@ -474,8 +474,7 @@ public class RideBookingUI {
 	private void cancelRide(Customer customer) {
 		System.out.println("\n--- Cancel a Ride ---");
 		System.out.print("Enter Ride ID to cancel: ");
-		String rideId = scanner.nextLine().trim();
-
+		String rideId = scanner.nextLine().trim().toUpperCase();
 		try {
 			// Add validation if necessary to check ride ownership
 
