@@ -10,67 +10,72 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PaymentDaoImplTest {
 
-    private PaymentDao paymentDao;
+	private PaymentDao paymentDao;
 
-    @BeforeEach
-    void setUp() {
-        paymentDao = new PaymentDaoImpl();
-        DataCollection.paymentMap.clear(); // Clear payment map before each test
-    }
+	@BeforeEach // This method runs before each test case
+	void setUp() {
+		paymentDao = new PaymentDaoImpl();// We initialize a new PaymentDaoImpl object
+		DataCollection.paymentMap.clear();// Clear payment map before each test
+	}
 
-    @Test
-    void testAddPayment() {
-        Payment payment = new Payment("P1", "R1", 500.0, "Credit Card");
-        paymentDao.addPayment(payment);
+	@Test
+	void testAddPayment() {
+		Payment payment = new Payment("P1", "R1", 500.0, "Credit Card");
+		paymentDao.addPayment(payment);// Add the payment
+		Payment retrieved = paymentDao.getPaymentById("P1");// Retrieve it back to check if it was added correctly
+		assertNotNull(retrieved); // Check that the payment is not null
+		assertEquals(500.0, retrieved.getAmount()); // Checks for correct values
+		assertEquals("Credit Card", retrieved.getPaymentMethod()); // Checks for Correct payment method
+	}
 
-        Payment retrieved = paymentDao.getPaymentById("P1");
-        assertNotNull(retrieved);
-        assertEquals(500.0, retrieved.getAmount());
-        assertEquals("Credit Card", retrieved.getPaymentMethod());
-    }
+	@Test
+	void testGetPaymentById() {
+		Payment payment = new Payment("P2", "R2", 300.0, "Cash");
+		DataCollection.paymentMap.put("P2", payment); // Directly put a payment into the paymentMap
+		Payment retrieved = paymentDao.getPaymentById("P2");
+		assertNotNull(retrieved);
+		assertEquals("Cash", retrieved.getPaymentMethod());
+	}
 
-    @Test
-    void testGetPaymentById() {
-        Payment payment = new Payment("P2", "R2", 300.0, "Cash");
-        DataCollection.paymentMap.put("P2", payment);
+	@Test
+	void testUpdatePayment() {
+		Payment payment = new Payment("P3", "R3", 200.0, "Debit Card");
 
-        Payment retrieved = paymentDao.getPaymentById("P2");
-        assertNotNull(retrieved);
-        assertEquals("Cash", retrieved.getPaymentMethod());
-    }
+		paymentDao.addPayment(payment);// Add the payment
 
-    @Test
-    void testUpdatePayment() {
-        Payment payment = new Payment("P3", "R3", 200.0, "Debit Card");
-        paymentDao.addPayment(payment);
+		Payment updatedPayment = new Payment("P3", "R3", 250.0, "Debit Card");
+		paymentDao.updatePayment(updatedPayment);// Update the payment
 
-        Payment updatedPayment = new Payment("P3", "R3", 250.0, "Debit Card");
-        paymentDao.updatePayment(updatedPayment);
+		Payment result = paymentDao.getPaymentById("P3");// Fetch the payment again and check if the updation work
+		assertEquals(250.0, result.getAmount());
+	}
 
-        Payment result = paymentDao.getPaymentById("P3");
-        assertEquals(250.0, result.getAmount());
-    }
+	@Test
+	void testDeletePayment() {
+		Payment payment = new Payment("P4", "R4", 150.0, "UPI");
 
-    @Test
-    void testDeletePayment() {
-        Payment payment = new Payment("P4", "R4", 150.0, "UPI");
-        paymentDao.addPayment(payment);
+		paymentDao.addPayment(payment);// Add the payment
 
-        paymentDao.deletePayment("P4");
-        assertNull(paymentDao.getPaymentById("P4"));
-    }
+		paymentDao.deletePayment("P4");// Delete the payment
 
-    @Test
-    void testGetAllPayments() {
-        Payment payment1 = new Payment("P5", "R5", 100.0, "Net Banking");
-        Payment payment2 = new Payment("P6", "R6", 400.0, "Wallet");
+		assertNull(paymentDao.getPaymentById("P4")); // Fetching the deleted payment it should be null now
+	}
 
-        paymentDao.addPayment(payment1);
-        paymentDao.addPayment(payment2);
+	@Test
+	void testGetAllPayments() {
+		Payment payment1 = new Payment("P5", "R5", 100.0, "Net Banking");
+		Payment payment2 = new Payment("P6", "R6", 400.0, "Wallet");
 
-        Map<String, Payment> payments = paymentDao.getAllPayments();
-        assertEquals(2, payments.size());
-        assertTrue(payments.containsKey("P5"));
-        assertTrue(payments.containsKey("P6"));
-    }
+		// Add two different payments
+		paymentDao.addPayment(payment1);
+		paymentDao.addPayment(payment2);
+
+		// Get all payments from DAO
+		Map<String, Payment> payments = paymentDao.getAllPayments();
+
+		// Check that the map contains exactly 2 entries and both are present
+		assertEquals(2, payments.size());
+		assertTrue(payments.containsKey("P5"));
+		assertTrue(payments.containsKey("P6"));
+	}
 }
