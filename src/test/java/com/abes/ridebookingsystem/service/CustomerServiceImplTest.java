@@ -11,15 +11,18 @@ class CustomerServiceImplTest {
 
     private CustomerService customerService;
 
+ // This method runs before every test case.
     @BeforeEach
     void setUp() {
         customerService = new CustomerServiceImpl();
 
+     // Get all customers and clear the map
         // Clear existing customers (if allowed by your DAO map structure)
         Map<String, Customer> allCustomers = customerService.getAllCustomers();
         allCustomers.clear(); // WARNING: Only if your map is mutable!
     }
 
+ // Test to check adding a customer and then retrieving them by ID
     @Test
     void testAddAndGetCustomer() {
         Customer customer = new Customer("cust1", "Vidushi", "vidushi@example.com", "Vidushi@123", "+911234567890");
@@ -32,6 +35,7 @@ class CustomerServiceImplTest {
         assertEquals("+911234567890", fetchedCustomer.getPhoneNumber());
     }
 
+ // Test to check updating a customer's details
     @Test
     void testUpdateCustomer() {
         Customer customer = new Customer("cust2", "Anamika", "ana@example.com", "Ana@123", "+919876543210");
@@ -47,6 +51,7 @@ class CustomerServiceImplTest {
         assertEquals("+911111111111", updated.getPhoneNumber());
     }
 
+ // Test to check deleting a customer
     @Test
     void testDeleteCustomer() {
         Customer customer = new Customer("cust3", "Ishita", "ishi@example.com", "Ishi@123", "+918888888888");
@@ -56,7 +61,8 @@ class CustomerServiceImplTest {
         Customer deleted = customerService.getCustomerById("cust3");
         assertNull(deleted);
     }
-
+    
+ // Test to check fetching all customers
     @Test
     void testGetAllCustomers() {
         Customer customer1 = new Customer("cust4", "Riya", "riya@example.com", "Riya@123", "+911234567891");
