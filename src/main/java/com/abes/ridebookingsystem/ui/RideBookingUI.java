@@ -188,7 +188,7 @@ public class RideBookingUI {
 			System.out.print("User ID: ");
 			userId = scanner.nextLine().trim();
 			if (!ValidationUtil.isNotEmpty(userId)) {
-				System.out.println("Name is required.");
+				System.out.println("UserId is required.");
 			} else {
 				break;
 			}
