@@ -17,8 +17,10 @@ public class RideBookingUI {
 
 	public void start() {
 		System.out.println("Welcome to the Ride Booking System!");
-
+        
+		// Infinite loop to keep the menu running until the user exits
 		while (true) {
+			 // Displaying the main menu options
 			System.out.println("\n1. Register User");
 			System.out.println("2. Login User");
 			System.out.println("3. Exit");
@@ -26,17 +28,17 @@ public class RideBookingUI {
 
 			int option;
 			try {
-				option = Integer.parseInt(scanner.nextLine());
+				option = Integer.parseInt(scanner.nextLine()); // Reading user input as a line, then converting it into an integer
 			} catch (NumberFormatException e) {
-				System.out.println("Invalid input. Please enter a number.");
+				System.out.println("Invalid input. Please enter a number."); // If user enters something that’s not a number, show an error message
 				continue;
 			}
 
 			switch (option) {
-			case 1 -> registerUser();
+			case 1 -> registerUser(); // Calling registered user function 
 			case 2 -> loginUser();
 			case 3 -> {
-				System.out.println("Exiting system. Goodbye!");
+				System.out.println("Exiting system. Goodbye!"); // If user enters a number other than 1, 2, or 3
 				return;
 			}
 			default -> System.out.println("Invalid option! Please try again.");
@@ -49,13 +51,15 @@ public class RideBookingUI {
 		System.out.println("\n--- Register User ---");
 
 		System.out.print("Enter user type (customer/driver): ");
-		String type = scanner.nextLine().trim().toLowerCase();
+		String type = scanner.nextLine().trim().toLowerCase(); 
 
+		//Admin registration not allowed
 		if (type.equals("admin")) {
 			System.out.println("Admin cannot be registered.");
 			return;
 		}
-
+        
+		// We enter anything other than customer and driver it give invalid user type
 		if (!type.equals("customer") && !type.equals("driver")) {
 			System.out.println("Invalid user type.");
 			return;
@@ -65,13 +69,15 @@ public class RideBookingUI {
 		String userId;
 		while (true) {
 			System.out.print("User ID: ");
-			userId = scanner.nextLine().trim();
-
+			userId = scanner.nextLine().trim(); 
+            
+			//Checking if user is valid or not 
 			if (!ValidationUtil.isValidUserId(userId)) {
 				System.out.println("User ID is required.");
 				continue; // Go back to the beginning of the loop
 			}
-
+            
+			//If user id already exist 
 			if (userService.getAllUsers().containsKey(userId)) {
 				System.out.println("User ID already exists. Please try a different one.");
 				continue;
@@ -95,7 +101,8 @@ public class RideBookingUI {
 			// Valid input
 			break;
 		}
-
+		
+		//Email Validation
 		String email;
 		while (true) {
 			System.out.print("Email: ");
@@ -187,6 +194,7 @@ public class RideBookingUI {
 		while (true) {
 			System.out.print("User ID: ");
 			userId = scanner.nextLine().trim();
+			//UserID Validation
 			if (!ValidationUtil.isNotEmpty(userId)) {
 				System.out.println("UserId is required.");
 			} else {
@@ -199,7 +207,7 @@ public class RideBookingUI {
 			System.out.print("Password: ");
 			password = scanner.nextLine().trim();
 			if (!ValidationUtil.isNotEmpty(password)) {
-				System.out.println("Name is required.");
+				System.out.println("Password is required.");
 			} else {
 				break;
 			}
